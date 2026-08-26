@@ -1,18 +1,16 @@
 const express = require('express');
 const router = express.Router();
+const { requireLogin } = require('../middleware/auth');
 const { setMembership } = require('../db/queries');
 require('dotenv').config();
 
 // ── Join the club ──────────────────────────────────────────────────────────────
 
-router.get('/join', (req, res) => {
-  if (!req.user) return res.redirect('/log-in');
+router.get('/join', requireLogin, (req, res) => {
   res.render('join', { error: null, success: null });
 });
 
-router.post('/join', async (req, res) => {
-  if (!req.user) return res.redirect('/log-in');
-
+router.post('/join', requireLogin, async (req, res) => {
   const { passcode } = req.body;
 
   if (passcode === process.env.MEMBERSHIP_PASSCODE) {
