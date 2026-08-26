@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sign Up – Members Only</title>
+  <style>
+    body { font-family: sans-serif; max-width: 420px; margin: 60px auto; padding: 0 16px; }
+    input { display: block; width: 100%; margin: 6px 0 12px; padding: 8px; box-sizing: border-box; }
+    .error { color: red; font-size: 0.9em; }
+    button { padding: 8px 20px; }
+    label { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; }
+    label input { width: auto; margin: 0; }
+  </style>
+</head>
+<body>
+  <%- include('partials/nav') %>
+
+  <h2>Sign Up</h2>
+
+  <% if (errors.length > 0) { %>
+    <ul class="error">
+      <% errors.forEach(e => { %><li><%= e.msg %></li><% }); %>
+    </ul>
+  <% } %>
+
+  <form method="POST" action="/sign-up">
+    <input name="firstName"       placeholder="First Name"        value="<%= data.firstName || '' %>"  required />
+    <input name="lastName"        placeholder="Last Name"         value="<%= data.lastName  || '' %>"  required />
+    <input name="email"    type="email" placeholder="Email"       value="<%= data.email     || '' %>"  required />
+    <input name="password" type="password" placeholder="Password (min 6 chars)" required />
+    <input name="confirmPassword" type="password" placeholder="Confirm Password" required />
+
+    <label>
+      <input type="checkbox" name="isAdmin" />
+      Register as Admin
+    </label>
+
+    <button type="submit">Create Account</button>
+  </form>
+
+  <p>Already have an account? <a href="/log-in">Log In</a></p>
+</body>
+</html>

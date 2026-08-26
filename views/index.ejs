@@ -1,0 +1,50 @@
+<%
+// inline layout wrapper – we'll use a simple include approach
+%>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Members Only</title>
+  <style>
+    body { font-family: sans-serif; max-width: 700px; margin: 40px auto; padding: 0 16px; }
+    nav  { display: flex; gap: 16px; margin-bottom: 24px; }
+    nav a { text-decoration: none; color: #333; }
+    .card { border: 1px solid #ddd; border-radius: 6px; padding: 16px; margin-bottom: 16px; }
+    .meta { color: #888; font-size: 0.85em; }
+    .delete-btn { background: #e74c3c; color: white; border: none; border-radius: 4px; padding: 4px 10px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <%- include('partials/nav') %>
+
+  <h1>All Messages</h1>
+
+  <% if (messages.length === 0) { %>
+    <p>No messages yet. Be the first!</p>
+  <% } %>
+
+  <% messages.forEach(msg => { %>
+    <div class="card">
+      <h3><%= msg.title %></h3>
+      <p><%= msg.text %></p>
+
+      <%
+        // Members and admins see author + date; guests see nothing
+        if (user && (user.is_member || user.is_admin)) {
+      %>
+        <p class="meta">
+          By <%= msg.first_name %> <%= msg.last_name %> &mdash;
+          <%= new Date(msg.created_at).toLocaleString() %>
+        </p>
+      <% } %>
+
+      <% if (user && user.is_admin) { %>
+        <form method="POST" action="/delete/<%= msg.id %>">
+          <button class="delete-btn" type="submit">Delete</button>
+        </form>
+      <% } %>
+    </div>
+  <% }); %>
+</body>
+</html>

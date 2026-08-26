@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Members Only</title>
+  <style>
+    body { font-family: sans-serif; max-width: 700px; margin: 40px auto; padding: 0 16px; }
+    nav  { display: flex; gap: 16px; margin-bottom: 24px; }
+    nav a { text-decoration: none; color: #333; }
+    .card { border: 1px solid #ddd; border-radius: 6px; padding: 16px; margin-bottom: 16px; }
+    .meta { color: #888; font-size: 0.85em; }
+    .error { color: red; }
+    .success { color: green; }
+    input, textarea { display: block; width: 100%; margin: 6px 0 12px; padding: 8px; box-sizing: border-box; }
+    button { padding: 8px 16px; cursor: pointer; }
+    .delete-btn { background: #e74c3c; color: white; border: none; border-radius: 4px; padding: 4px 10px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="/">🏠 Home</a>
+    <% if (locals.user) { %>
+      <a href="/new-message">✏️ New Message</a>
+      <% if (!user.is_member) { %><a href="/join">🔑 Join Club</a><% } %>
+      <a href="/log-out">Logout (<%= user.email %>)</a>
+    <% } else { %>
+      <a href="/sign-up">Sign Up</a>
+      <a href="/log-in">Log In</a>
+    <% } %>
+  </nav>
+
+  <%- body %>
+
+</body>
+</html>

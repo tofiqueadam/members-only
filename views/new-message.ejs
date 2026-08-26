@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>New Message – Members Only</title>
+  <style>
+    body { font-family: sans-serif; max-width: 520px; margin: 60px auto; padding: 0 16px; }
+    input, textarea { display: block; width: 100%; margin: 6px 0 12px; padding: 8px; box-sizing: border-box; }
+    .error { color: red; font-size: 0.9em; }
+    button { padding: 8px 20px; }
+  </style>
+</head>
+<body>
+  <%- include('partials/nav') %>
+
+  <h2>New Message</h2>
+
+  <% if (errors.length > 0) { %>
+    <ul class="error">
+      <% errors.forEach(e => { %><li><%= e.msg %></li><% }); %>
+    </ul>
+  <% } %>
+
+  <form method="POST" action="/new-message">
+    <input name="title" placeholder="Title" required />
+    <textarea name="text" rows="5" placeholder="Your message…" required></textarea>
+    <button type="submit">Post</button>
+  </form>
+</body>
+</html>

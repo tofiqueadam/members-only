@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Join the Club – Members Only</title>
+  <style>
+    body { font-family: sans-serif; max-width: 420px; margin: 60px auto; padding: 0 16px; }
+    input { display: block; width: 100%; margin: 6px 0 12px; padding: 8px; box-sizing: border-box; }
+    .error { color: red; }
+    .success { color: green; }
+    button { padding: 8px 20px; }
+  </style>
+</head>
+<body>
+  <%- include('partials/nav') %>
+
+  <h2>Join the Club 🔑</h2>
+  <p>Enter the secret passcode to become a member and see who wrote each message.</p>
+
+  <% if (error)   { %><p class="error"><%= error %></p><% } %>
+  <% if (success) { %><p class="success"><%= success %></p><% } %>
+
+  <form method="POST" action="/join">
+    <input name="passcode" type="password" placeholder="Secret Passcode" required />
+    <button type="submit">Enter</button>
+  </form>
+</body>
+</html>
