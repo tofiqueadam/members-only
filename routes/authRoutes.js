@@ -58,11 +58,20 @@ router.get('/log-in', (req, res) => {
 });
 
 router.post('/log-in',
-  passport.authenticate('local', {
-    successRedirect: '/',
-    failureRedirect: '/log-in',
-    failureFlash: false,    // we handle errors simply below
-  })
+  (req, res, next) => {
+    // passport.authenticate as middleware so we can handle failure ourselves
+    passport.authenticate('local', (err, user, info) => {
+      if (err) return next(err);
+      if (!user) {
+        // Re-render the login page with the error message from the strategy
+        return res.render('log-in', { error: info?.message || 'Invalid credentials.' });
+      }
+      req.logIn(user, err => {
+        if (err) return next(err);
+        res.redirect('/');
+      });
+    })(req, res, next);
+  }
 );
 
 // ── Log-out ────────────────────────────────────────────────────────────────────
