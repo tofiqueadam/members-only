@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Members Only – Study Guide</title>
+  <style>
+    /* ─── Reset & Base ─────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      font-size: 14px;
+      line-height: 1.7;
+      color: #1a1a2e;
+      background: #f8f9fc;
+    }
+
+    /* ─── Print Styles ─────────────────────────────────────────── */
+    @media print {
+      body { background: white; font-size: 12px; }
+      .page-wrapper { max-width: 100%; padding: 0; }
+      .cover { page-break-after: always; }
+      section { page-break-inside: avoid; }
+      pre, .table-wrap { page-break-inside: avoid; }
+      @page { margin: 1.8cm 2cm; }
+    }
+
+    /* ─── Layout ───────────────────────────────────────────────── */
+    .page-wrapper {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+    }
+
+    /* ─── Cover ────────────────────────────────────────────────── */
+    .cover {
+      background: linear-gradient(135deg, #16213e 0%, #0f3460 60%, #533483 100%);
+      border-radius: 16px;
+      padding: 64px 56px;
+      color: white;
+      margin-bottom: 48px;
+      position: relative;
+      overflow: hidden;
+    }
+    .cover::after {
+      content: '🔐';
+      position: absolute;
+      right: 56px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 96px;
+      opacity: 0.18;
+    }
+    .cover .tag {
+      display: inline-block;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 20px;
+      padding: 4px 14px;
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .cover h1 {
+      font-size: 38px;
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 14px;
+    }
+    .cover p {
+      font-size: 15px;
+      opacity: 0.82;
+      max-width: 480px;
+      line-height: 1.6;
+    }
+    .cover .pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 28px;
+    }
+    .cover .pill {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 12px;
+      padding: 4px 12px;
+      font-size: 12px;
+    }
+
+    /* ─── TOC ──────────────────────────────────────────────────── */
+    .toc {
+      background: white;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+      padding: 28px 32px;
+      margin-bottom: 48px;
+    }
+    .toc h2 {
+      font-size: 13px;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: #64748b;
+      margin-bottom: 16px;
+    }
+    .toc ol {
+      padding-left: 20px;
+      columns: 2;
+      column-gap: 40px;
+    }
+    .toc li {
+      margin-bottom: 6px;
+      font-size: 13px;
+      break-inside: avoid;
+    }
+    .toc a {
+      color: #0f3460;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .toc a:hover { text-decoration: underline; }
+
+    /* ─── Sections ──────────────────────────────────────────────── */
+    section {
+      background: white;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+      padding: 36px 40px;
+      margin-bottom: 28px;
+    }
+    section h2 {
+      font-size: 20px;
+      font-weight: 700;
+      color: #0f3460;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #e2e8f0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      background: #0f3460;
+      color: white;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    p { margin-bottom: 14px; }
+    p:last-child { margin-bottom: 0; }
+
+    /* ─── Code ──────────────────────────────────────────────────── */
+    code {
+      font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+      background: #f1f5f9;
+      border: 1px solid #e2e8f0;
+      border-radius: 4px;
+      padding: 1px 6px;
+      font-size: 12.5px;
+      color: #be185d;
+    }
+    pre {
+      background: #0f172a;
+      color: #e2e8f0;
+      border-radius: 10px;
+      padding: 20px 24px;
+      overflow-x: auto;
+      font-size: 12.5px;
+      line-height: 1.65;
+      margin: 18px 0;
+      position: relative;
+    }
+    pre code {
+      background: none;
+      border: none;
+      padding: 0;
+      color: inherit;
+      font-size: inherit;
+    }
+    /* Syntax color hints */
+    pre .c  { color: #64748b; font-style: italic; } /* comment */
+    pre .k  { color: #93c5fd; } /* keyword */
+    pre .s  { color: #86efac; } /* string */
+    pre .fn { color: #fbbf24; } /* function */
+    pre .v  { color: #f0abfc; } /* variable */
+    pre .n  { color: #7dd3fc; } /* number */
+    pre .arrow { color: #f472b6; font-weight: bold; }
+
+    /* ─── Tables ────────────────────────────────────────────────── */
+    .table-wrap { overflow-x: auto; margin: 18px 0; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    thead tr {
+      background: #0f3460;
+      color: white;
+    }
+    th {
+      padding: 10px 16px;
+      text-align: left;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    td {
+      padding: 10px 16px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    tbody tr:nth-child(even) { background: #f8fafc; }
+    .yes { color: #16a34a; font-weight: 700; }
+    .no  { color: #dc2626; font-weight: 700; }
+
+    /* ─── Callout boxes ─────────────────────────────────────────── */
+    .callout {
+      border-left: 4px solid;
+      border-radius: 0 8px 8px 0;
+      padding: 14px 18px;
+      margin: 18px 0;
+      font-size: 13.5px;
+    }
+    .callout.info  { background: #eff6ff; border-color: #3b82f6; color: #1e40af; }
+    .callout.warn  { background: #fffbeb; border-color: #f59e0b; color: #92400e; }
+    .callout.tip   { background: #f0fdf4; border-color: #22c55e; color: #166534; }
+    .callout strong { display: block; margin-bottom: 4px; font-size: 12px; letter-spacing: 0.5px; text-transform: uppercase; }
+
+    /* ─── File tree ─────────────────────────────────────────────── */
+    .file-tree {
+      background: #0f172a;
+      color: #e2e8f0;
+      border-radius: 10px;
+      padding: 20px 24px;
+      font-family: 'Cascadia Code', 'Fira Code', monospace;
+      font-size: 12.5px;
+      line-height: 1.8;
+      margin: 18px 0;
+    }
+    .file-tree .dir  { color: #7dd3fc; font-weight: 600; }
+    .file-tree .file { color: #e2e8f0; }
+    .file-tree .comment { color: #64748b; }
+
+    /* ─── Step list ─────────────────────────────────────────────── */
+    .steps { list-style: none; padding: 0; margin: 18px 0; }
+    .steps li {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      padding: 10px 0;
+      border-bottom: 1px solid #f1f5f9;
+    }
+    .steps li:last-child { border-bottom: none; }
+    .step-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 26px;
+      height: 26px;
+      background: linear-gradient(135deg, #0f3460, #533483);
+      color: white;
+      border-radius: 50%;
+      font-size: 11px;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* ─── Passcode card ─────────────────────────────────────────── */
+    .passcode-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 16px;
+    }
+    .passcode-card {
+      background: linear-gradient(135deg, #1e3a5f, #533483);
+      color: white;
+      border-radius: 12px;
+      padding: 20px 22px;
+    }
+    .passcode-card .label {
+      font-size: 11px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      opacity: 0.7;
+      margin-bottom: 8px;
+    }
+    .passcode-card .code {
+      font-family: monospace;
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 2px;
+    }
+    .passcode-card .note {
+      font-size: 12px;
+      opacity: 0.65;
+      margin-top: 6px;
+    }
+
+    /* ─── Footer ────────────────────────────────────────────────── */
+    footer {
+      text-align: center;
+      color: #94a3b8;
+      font-size: 12px;
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 1px solid #e2e8f0;
+    }
+  </style>
+</head>
+<body>
+<div class="page-wrapper">
+
+  <!-- ── COVER ───────────────────────────────────────────────── -->
+  <div class="cover">
+    <div class="tag">Study Guide</div>
+    <h1>Members Only</h1>
+    <p>
+      A deep-dive into authentication and authorization with
+      <strong>Passport.js</strong>, <strong>bcrypt</strong>,
+      <strong>express-session</strong>, and <strong>PostgreSQL</strong>.
+    </p>
+    <div class="pills">
+      <span class="pill">Node.js / Express</span>
+      <span class="pill">Passport.js Local Strategy</span>
+      <span class="pill">bcrypt</span>
+      <span class="pill">PostgreSQL Sessions</span>
+      <span class="pill">express-validator</span>
+      <span class="pill">EJS Templates</span>
+    </div>
+  </div>
+
+  <!-- ── TOC ─────────────────────────────────────────────────── -->
+  <div class="toc">
+    <h2>Contents</h2>
+    <ol>
+      <li><a href="#s1">How a User Logs In (Passport.js)</a></li>
+      <li><a href="#s2">Passwords with bcrypt</a></li>
+      <li><a href="#s3">Sessions</a></li>
+      <li><a href="#s4">Authorization Levels</a></li>
+      <li><a href="#s5">Middleware Pattern</a></li>
+      <li><a href="#s6">Form Validation</a></li>
+      <li><a href="#s7">Project Structure</a></li>
+      <li><a href="#s8">Things to Try</a></li>
+    </ol>
+  </div>
+
+  <!-- ── SECTION 1 ────────────────────────────────────────────── -->
+  <section id="s1">
+    <h2><span class="section-num">1</span> How a User Logs In (Passport.js)</h2>
+
+    <p>
+      When a user submits the login form, Express hands the request to
+      <code>passport.authenticate('local')</code>. Passport's <strong>LocalStrategy</strong>
+      then runs your custom verification callback.
+    </p>
+
+    <pre><code><span class="c">// ── Login request flow ──────────────────────────────</span>
+Browser  <span class="arrow">→</span>  POST /log-in  <span class="arrow">→</span>  passport.authenticate('local')
+                                 <span class="arrow">↓</span>
+                           LocalStrategy callback
+                           <span class="n">1.</span> findUserByEmail(email)
+                           <span class="n">2.</span> bcrypt.compare(password, hash)
+                           <span class="n">3.</span> done(null, user)  <span class="c">← success</span>
+                                 <span class="arrow">↓</span>
+                           passport.serializeUser  <span class="arrow">→</span>  stores user.id in session
+                                 <span class="arrow">↓</span>
+                           req.session.passport = { user: 1 }  <span class="c">← saved to DB</span></code></pre>
+
+    <p>On every <em>subsequent</em> request the reverse happens:</p>
+
+    <pre><code>Browser sends cookie  <span class="arrow">→</span>  express-session reads session from DB
+                      <span class="arrow">→</span>  passport.deserializeUser(id)
+                      <span class="arrow">→</span>  findUserById(id)
+                      <span class="arrow">→</span>  req.user = { id, email, is_member, is_admin, ... }</code></pre>
+
+    <div class="callout info">
+      <strong>Why two steps?</strong>
+      <code>serializeUser</code> decides what to store in the session (just the <code>id</code>, not the whole user object).
+      <code>deserializeUser</code> uses that id to reload the full user from the DB on every request.
+      This keeps sessions small and user data always fresh.
+    </div>
+
+    <p><strong>Key files:</strong> <code>config/passport.js</code> (LocalStrategy) · <code>app.js</code> (middleware registration)</p>
+  </section>
+
+  <!-- ── SECTION 2 ────────────────────────────────────────────── -->
+  <section id="s2">
+    <h2><span class="section-num">2</span> Passwords with bcrypt</h2>
+
+    <p>
+      Passwords are <strong>never stored as plain text</strong>. bcrypt produces an
+      irreversible hash; even if the database is leaked, passwords remain protected.
+    </p>
+
+    <pre><code><span class="c">// ── Sign-up: hash before storing ───────────────────</span>
+<span class="k">const</span> hashedPassword = <span class="k">await</span> bcrypt.hash(password, <span class="n">10</span>);
+<span class="c">// saltRounds = 10  →  2^10 = 1024 hashing iterations</span>
+
+<span class="c">// ── Log-in: compare plain text vs stored hash ──────</span>
+<span class="k">const</span> match = <span class="k">await</span> bcrypt.compare(plainPassword, hashedPassword);
+<span class="c">// Returns true/false. NEVER compare plain strings!</span></code></pre>
+
+    <div class="callout tip">
+      <strong>Salt rounds explained</strong>
+      A <em>salt</em> is random data prepended to the password before hashing so
+      two identical passwords produce different hashes. <code>saltRounds = 10</code>
+      is the CPU cost factor — higher = slower to brute-force, but also slower to hash on login.
+      10 is a commonly accepted default.
+    </div>
+
+    <div class="callout warn">
+      <strong>Common mistake</strong>
+      Never use <code>===</code> to compare passwords. Always use
+      <code>bcrypt.compare()</code> — it handles timing-safe comparison and
+      automatic salt extraction from the stored hash.
+    </div>
+  </section>
+
+  <!-- ── SECTION 3 ────────────────────────────────────────────── -->
+  <section id="s3">
+    <h2><span class="section-num">3</span> Sessions</h2>
+
+    <p>
+      HTTP is <strong>stateless</strong> — each request knows nothing about previous ones.
+      Sessions fix this by keeping server-side state tied to a browser cookie.
+    </p>
+
+    <pre><code><span class="n">1.</span> User logs in  <span class="arrow">→</span>  session created  <span class="arrow">→</span>  session ID sent as cookie
+<span class="n">2.</span> Next request  <span class="arrow">→</span>  browser sends cookie  <span class="arrow">→</span>  server looks up session
+<span class="n">3.</span> Session row in DB:
+   { sid: "abc123", sess: { passport: { user: 42 } }, expire: "..." }</code></pre>
+
+    <p>
+      <code>connect-pg-simple</code> stores sessions in a <code>session</code> table
+      (auto-created). You can inspect it live:
+    </p>
+
+    <pre><code>SELECT * FROM session;  <span class="c">-- run in psql to see active sessions</span></code></pre>
+
+    <div class="callout info">
+      <strong>Session vs JWT</strong>
+      This project uses <em>server-side sessions</em> — state lives in PostgreSQL.
+      An alternative pattern (JWTs) stores state in a signed token on the client.
+      Sessions are simpler to invalidate (just delete the DB row) but require DB reads per request.
+    </div>
+  </section>
+
+  <!-- ── SECTION 4 ────────────────────────────────────────────── -->
+  <section id="s4">
+    <h2><span class="section-num">4</span> Authorization Levels</h2>
+
+    <p>
+      The app has four distinct permission levels, checked at both the
+      route level (middleware) and the view level (EJS conditionals).
+    </p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>User State</th>
+            <th>See Messages</th>
+            <th>See Author &amp; Date</th>
+            <th>Delete Messages</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Guest (not logged in)</td>
+            <td class="yes">✅</td>
+            <td class="no">❌</td>
+            <td class="no">❌</td>
+          </tr>
+          <tr>
+            <td>Logged-in, no membership</td>
+            <td class="yes">✅</td>
+            <td class="no">❌</td>
+            <td class="no">❌</td>
+          </tr>
+          <tr>
+            <td>Member (<code>is_member = true</code>)</td>
+            <td class="yes">✅</td>
+            <td class="yes">✅</td>
+            <td class="no">❌</td>
+          </tr>
+          <tr>
+            <td>Admin (<code>is_admin = true</code>)</td>
+            <td class="yes">✅</td>
+            <td class="yes">✅</td>
+            <td class="yes">✅</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>This is enforced in the view template:</p>
+
+    <pre><code><span class="c">&lt;!-- views/index.ejs ──────────────────────────────── --&gt;</span>
+&lt;% <span class="k">if</span> (user &amp;&amp; (user.is_member || user.is_admin)) { %&gt;
+  &lt;p&gt;By &lt;%= msg.first_name %&gt; &lt;%= msg.last_name %&gt;&lt;/p&gt;
+  &lt;p&gt;&lt;%= msg.created_at %&gt;&lt;/p&gt;
+&lt;% } %&gt;
+
+&lt;% <span class="k">if</span> (user &amp;&amp; user.is_admin) { %&gt;
+  &lt;form action=<span class="s">"/delete/&lt;%= msg.id %&gt;"</span> method=<span class="s">"POST"</span>&gt;
+    &lt;button&gt;Delete&lt;/button&gt;
+  &lt;/form&gt;
+&lt;% } %&gt;</code></pre>
+  </section>
+
+  <!-- ── SECTION 5 ────────────────────────────────────────────── -->
+  <section id="s5">
+    <h2><span class="section-num">5</span> Middleware Pattern</h2>
+
+    <p>
+      Express middleware is a function with the signature
+      <code>(req, res, next)</code>. Calling <code>next()</code> passes control
+      downstream; not calling it stops the chain.
+    </p>
+
+    <pre><code><span class="c">// middleware/auth.js ───────────────────────────────────</span>
+<span class="k">function</span> <span class="fn">requireLogin</span>(req, res, next) {
+  <span class="k">if</span> (req.isAuthenticated()) <span class="k">return</span> next(); <span class="c">// passport adds this method</span>
+  res.redirect(<span class="s">'/log-in'</span>);
+}
+
+<span class="k">function</span> <span class="fn">requireAdmin</span>(req, res, next) {
+  <span class="k">if</span> (req.user &amp;&amp; req.user.is_admin) <span class="k">return</span> next();
+  res.status(<span class="n">403</span>).send(<span class="s">'Forbidden'</span>);
+}
+
+<span class="c">// Usage in a route file:</span>
+router.post(<span class="s">'/delete/:id'</span>, requireLogin, requireAdmin, <span class="k">async</span> (req, res) =&gt; {
+  <span class="c">// Only runs if both guards pass</span>
+  <span class="k">await</span> deleteMessage(req.params.id);
+  res.redirect(<span class="s">'/'</span>);
+});</code></pre>
+
+    <div class="callout info">
+      <strong>Middleware chain</strong>
+      You can stack as many middleware functions as you want in a single route definition.
+      Express runs them left-to-right — each must call <code>next()</code> or send a response.
+    </div>
+  </section>
+
+  <!-- ── SECTION 6 ────────────────────────────────────────────── -->
+  <section id="s6">
+    <h2><span class="section-num">6</span> Form Validation</h2>
+
+    <p>
+      <code>express-validator</code> lets you attach validation rules as middleware,
+      then collect all errors at once — giving users friendly feedback instead of
+      crashing mid-handler.
+    </p>
+
+    <pre><code><span class="c">// routes/authRoutes.js ────────────────────────────────</span>
+router.post(<span class="s">'/sign-up'</span>, [
+  body(<span class="s">'email'</span>).isEmail().normalizeEmail(),
+  body(<span class="s">'firstName'</span>).trim().notEmpty(),
+  body(<span class="s">'password'</span>).isLength({ min: <span class="n">6</span> }),
+
+  <span class="c">// Custom validator: passwords must match</span>
+  body(<span class="s">'confirmPassword'</span>).custom((val, { req }) =&gt; {
+    <span class="k">if</span> (val !== req.body.password)
+      <span class="k">throw new</span> Error(<span class="s">'Passwords do not match.'</span>);
+    <span class="k">return true</span>;
+  }),
+], <span class="k">async</span> (req, res) =&gt; {
+  <span class="k">const</span> errors = validationResult(req); <span class="c">// collect all failures</span>
+  <span class="k">if</span> (!errors.isEmpty())
+    <span class="k">return</span> res.render(<span class="s">'sign-up'</span>, { errors: errors.array() });
+  <span class="c">// ✅ Safe to proceed — data is validated</span>
+  <span class="k">const</span> hash = <span class="k">await</span> bcrypt.hash(req.body.password, <span class="n">10</span>);
+  <span class="k">await</span> createUser({ ...req.body, password: hash });
+  res.redirect(<span class="s">'/log-in'</span>);
+});</code></pre>
+
+    <div class="callout tip">
+      <strong>Why validate server-side?</strong>
+      Client-side validation (HTML5 <code>required</code>, JS) can be bypassed by anyone
+      who opens DevTools. Server-side validation is the real gate — always do both.
+    </div>
+  </section>
+
+  <!-- ── SECTION 7 ────────────────────────────────────────────── -->
+  <section id="s7">
+    <h2><span class="section-num">7</span> Project Structure</h2>
+
+    <div class="file-tree">
+<span class="dir">app.js</span>                  <span class="comment">← Express app entry point, middleware registration</span>
+<span class="dir">config/</span>
+  <span class="file">passport.js</span>           <span class="comment">← LocalStrategy definition (verify callback)</span>
+<span class="dir">db/</span>
+  <span class="file">pool.js</span>               <span class="comment">← pg connection pool (reused across queries)</span>
+  <span class="file">queries.js</span>            <span class="comment">← all SQL queries — no ORM, raw SQL</span>
+  <span class="file">schema.sql</span>            <span class="comment">← CREATE TABLE statements (users, messages, session)</span>
+<span class="dir">middleware/</span>
+  <span class="file">auth.js</span>               <span class="comment">← requireLogin, requireAdmin guard functions</span>
+<span class="dir">routes/</span>
+  <span class="file">authRoutes.js</span>         <span class="comment">← GET/POST /sign-up, /log-in, /log-out</span>
+  <span class="file">memberRoutes.js</span>       <span class="comment">← GET/POST /join (membership passcode)</span>
+  <span class="file">messageRoutes.js</span>      <span class="comment">← GET /, POST /new-message, POST /delete/:id</span>
+<span class="dir">views/</span>
+  <span class="file">index.ejs</span>             <span class="comment">← home page — conditional author visibility</span>
+  <span class="file">sign-up.ejs</span>
+  <span class="file">log-in.ejs</span>
+  <span class="file">join.ejs</span>
+  <span class="file">new-message.ejs</span>
+  <span class="dir">partials/</span>
+    <span class="file">nav.ejs</span>             <span class="comment">← shared navigation (login/logout link)</span>
+    </div>
+  </section>
+
+  <!-- ── SECTION 8 ────────────────────────────────────────────── -->
+  <section id="s8">
+    <h2><span class="section-num">8</span> Things to Try</h2>
+
+    <ul class="steps">
+      <li>
+        <span class="step-num">1</span>
+        <span>Sign up as a regular user and post a message. Notice the home page hides the author name.</span>
+      </li>
+      <li>
+        <span class="step-num">2</span>
+        <span>Enter the membership passcode on <code>/join</code>. Reload the home page — the author name and date now appear.</span>
+      </li>
+      <li>
+        <span class="step-num">3</span>
+        <span>Sign up a second user with the <em>Admin</em> checkbox checked. Log in and verify the Delete button appears on messages.</span>
+      </li>
+      <li>
+        <span class="step-num">4</span>
+        <span>While <em>logged out</em>, navigate directly to <code>/new-message</code>. Confirm you are redirected to <code>/log-in</code>.</span>
+      </li>
+      <li>
+        <span class="step-num">5</span>
+        <span>Open psql and run <code>SELECT * FROM session;</code> to see the raw session data stored by <code>connect-pg-simple</code>.</span>
+      </li>
+      <li>
+        <span class="step-num">6</span>
+        <span>Add <code>console.log(req.user)</code> inside any route handler to inspect the full deserialized user object on each request.</span>
+      </li>
+      <li>
+        <span class="step-num">7</span>
+        <span>Delete a session row from the DB directly and try refreshing — notice you get logged out even though the browser still has the cookie.</span>
+      </li>
+    </ul>
+
+    <h2 style="margin-top:32px; font-size:17px; color:#0f3460; border:none; padding:0;">Passcodes</h2>
+
+    <div class="passcode-grid">
+      <div class="passcode-card">
+        <div class="label">Membership Passcode</div>
+        <div class="code">clubhouse123</div>
+        <div class="note">Enter on the /join page to become a member</div>
+      </div>
+      <div class="passcode-card">
+        <div class="label">Admin Access</div>
+        <div class="code">☑ Checkbox</div>
+        <div class="note">Check "Is Admin" on the sign-up form</div>
+      </div>
+    </div>
+
+    <div class="callout warn" style="margin-top:20px;">
+      <strong>Production warning</strong>
+      Hardcoded passcodes are for development only. In production, use environment
+      variables (<code>process.env.MEMBERSHIP_CODE</code>) and never commit secrets to git.
+    </div>
+  </section>
+
+  <footer>
+    Members Only – Study Guide &nbsp;·&nbsp; The Odin Project &nbsp;·&nbsp; Authentication &amp; Authorization with Passport.js
+  </footer>
+
+</div>
+</body>
+</html>
